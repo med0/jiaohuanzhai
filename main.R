@@ -1,6 +1,6 @@
 
 #---------funs start---
-
+library(RCurl)
 
 # 1.
 .getPost <- function(x){
@@ -285,4 +285,42 @@ enddateidx
 # 1---------shenzhen longhubang start
 sz_temp=szLonghu(startdateidx,enddateidx)
 .writelonghubangTable(longhubangsqlitename,"longhubang",sz_temp)
+
+
+
+
 # 1---------shenzhen longhubang end
+
+.tryWeb()
+
+
+leftid=1&lmid=drgg&pageNo=1&stockCode=&keyword=%BF%C9%BD%BB%BB%BB&noticeType=&
+  startTime=2016-06-21&endTime=2016-07-06&imageField.x=28&imageField.y=5&tzy=
+  
+postlst=list(
+  leftid=1,
+  lmid="drgg",
+  pageNo=1,
+  stockCode="",
+  keyword=curlPercentEncode("可交换"),
+  noticeType="",
+  startTime="2016-06-21",
+  endTime="2016-07-06",
+  imageField.x=28,
+  imageField.y=5,
+  tzy=""
+)
+temp=.tryWeb(postForm,theurl="http://disclosure.szse.cn/m/search0425.jsp",
+             .params=postlst,
+             curl=myHandle,style="POST",.encoding="utf-8",
+             .contentEncodeFun = c)
+write.table(temp,"aaaa.html",row.names = "",col.names = "",quote=FALSE)
+
+
+
+temp=iconv(temp,"GBK","utf-8")
+# these above  encoding parament succeed ,but do not know why :(
+doc <- htmlParse(temp,asText=TRUE,useInternalNodes=TRUE,encoding="UTF-8") 
+return(doc)
+
+write
