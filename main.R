@@ -1,6 +1,7 @@
 
 #---------funs start---
 library(RCurl)
+library(XML)
 
 # 1.
 .getPost <- function(x){
@@ -234,7 +235,7 @@ httpheader<- c(
   "Connection"="keep-alive"
 )
 myHandle<- getCurlHandle(httpheader =httpheader,
-                         verbose=FALSE,
+                         verbose=TRUE,
                          connecttimeout=15,
                          cookiefile="",
                          timeout=10)  
@@ -294,33 +295,33 @@ sz_temp=szLonghu(startdateidx,enddateidx)
 .tryWeb()
 
 
-leftid=1&lmid=drgg&pageNo=1&stockCode=&keyword=%BF%C9%BD%BB%BB%BB&noticeType=&
-  startTime=2016-06-21&endTime=2016-07-06&imageField.x=28&imageField.y=5&tzy=
+
   
 postlst=list(
   leftid=1,
   lmid="drgg",
-  pageNo=1,
+  pageNo=0,
   stockCode="",
-  keyword=curlPercentEncode("可交换"),
+  keyword="可交换",
   noticeType="",
-  startTime="2016-06-21",
-  endTime="2016-07-06",
+  startTime="2016-06-30",
+  endTime="2016-09-19",
   imageField.x=28,
   imageField.y=5,
   tzy=""
 )
+
 temp=.tryWeb(postForm,theurl="http://disclosure.szse.cn/m/search0425.jsp",
              .params=postlst,
-             curl=myHandle,style="POST",.encoding="utf-8",
-             .contentEncodeFun = c)
-write.table(temp,"aaaa.html",row.names = "",col.names = "",quote=FALSE)
+             curl=myHandle,style="POST",.encoding="GBK")
+
+#write.table(temp,"d:\\c2.html",row.names = "",col.names = "",quote=FALSE)
 
 
 
-temp=iconv(temp,"GBK","utf-8")
+temp=iconv(temp,"GBK","UTF-8")
+temp=gsub("charset\\s*=\\s*gb2312","charset=UTF-8",temp)
+attr(temp,"Content-Type")[2]='UTF-8'
 # these above  encoding parament succeed ,but do not know why :(
 doc <- htmlParse(temp,asText=TRUE,useInternalNodes=TRUE,encoding="UTF-8") 
-return(doc)
 
-write
