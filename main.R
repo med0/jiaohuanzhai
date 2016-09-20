@@ -330,3 +330,43 @@ cat(temp)
 # these above  encoding parament succeed ,but do not know why :(
 doc <- htmlParse(temp,asText=TRUE,useInternalNodes=TRUE,encoding="UTF-8") 
 
+
+
+# to do list
+
+x=.tryWeb(getURL,"http://www.jisilu.cn/data/sfnew/arbitrage_vip_list/",curl=myHandle,.encoding="utf-8")
+y=fromJSON(x,nullValue=NA)
+z=lapply(y$rows,"[[",2)
+f <- function(lst)
+  function(nm) unlist(lapply(lst, "[[", nm), use.names=FALSE)
+
+df0 <- as.data.frame(Map(f(z), names(z[[1]]))) 
+
+
+
+#-----
+library(RSQLite)
+library(RCurl)
+#library(XML)
+library(RJSONIO)
+drv <- dbDriver("SQLite")
+#con_anjuke <- dbConnect(drv, dbname = "d:\\data\\.sqlite")
+
+
+#------
+y=fromJSON(x,nullValue=NA)
+
+z=lapply(y$rows,"[[",2)
+
+#oopt <- options() 
+
+f <- function(lst)
+  function(nm) unlist(lapply(lst, "[[", nm), use.names=FALSE)
+
+
+df0 <- as.data.frame(Map(f(z), names(z[[1]])),stringsAsFactors=FALSE) 
+#df1 <- do.call(rbind, lapply(z, data.frame)) 
+#identical(df0, df1) 
+
+
+
