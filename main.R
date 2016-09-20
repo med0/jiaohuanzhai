@@ -230,8 +230,12 @@ szLonghu=function(startdate,enddate) {
 
 #------set http header ,then CURL handle  start 
 httpheader<- c(
-  "User-Agent"="Firefox/41.0",
-  "Accept"="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+  "User-Agent"="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:48.0) Gecko/20100101 Firefox/48.0",
+  "Accept"="application/json, text/javascript, */*; q=0.01",
+  "Accept-Language"="zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3",
+  "Accept-Encoding"="gzip, deflate",
+  "Content-Type"="application/x-www-form-urlencoded; charset=UTF-8",
+  "X-Requested-With"="XMLHttpRequest",
   "Connection"="keep-alive"
 )
 myHandle<- getCurlHandle(httpheader =httpheader,
@@ -292,36 +296,37 @@ sz_temp=szLonghu(startdateidx,enddateidx)
 
 # 1---------shenzhen longhubang end
 
-.tryWeb()
-
-
-
-  
+#column="szse",
 postlst=list(
-  leftid=1,
-  lmid="drgg",
-  pageNo=0,
-  stockCode="",
-  keyword="可交换",
-  noticeType="",
-  startTime="2016-06-30",
-  endTime="2016-09-19",
-  imageField.x=28,
-  imageField.y=5,
-  tzy=""
+  category="",
+  column="",
+  columnTitle="历史公告查询",
+  limit="",
+  pageNum=1,
+  pageSize=30,
+  plate="",
+  seDate="请选择日期",
+  searchkey="可交换;",
+  showTitle="-1/searchkey/可交换",
+  sortName="",	
+  sortType="",
+  stock="",
+  tabName="fulltext",
+  trade=""
 )
 
-temp=.tryWeb(postForm,theurl="http://disclosure.szse.cn/m/search0425.jsp",
+
+(temp=.tryWeb(postForm,theurl="http://www.cninfo.com.cn/cninfo-new/announcement/query",
              .params=postlst,
-             curl=myHandle,style="POST",.encoding="GBK")
+             curl=myHandle,style="POST",.encoding="UTF-8"))
 
 #write.table(temp,"d:\\c2.html",row.names = "",col.names = "",quote=FALSE)
 
+cat(temp)
 
-
-temp=iconv(temp,"GBK","UTF-8")
-temp=gsub("charset\\s*=\\s*gb2312","charset=UTF-8",temp)
-attr(temp,"Content-Type")[2]='UTF-8'
+#temp=iconv(temp,"GBK","UTF-8")
+#temp=gsub("charset\\s*=\\s*gb2312","charset=UTF-8",temp)
+#attr(temp,"Content-Type")[2]='UTF-8'
 # these above  encoding parament succeed ,but do not know why :(
 doc <- htmlParse(temp,asText=TRUE,useInternalNodes=TRUE,encoding="UTF-8") 
 
