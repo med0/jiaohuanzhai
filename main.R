@@ -1,7 +1,8 @@
 
 #---------funs start---
 library(RCurl)
-library(XML)
+#library(XML)
+library(RJSONIO)
 
 # 1.
 .getPost <- function(x){
@@ -229,7 +230,7 @@ szLonghu=function(startdate,enddate) {
 
 
 #------set http header ,then CURL handle  start 
-httpheader<- c(
+myhttpheader<- c(
   "User-Agent"="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:48.0) Gecko/20100101 Firefox/48.0",
   "Accept"="application/json, text/javascript, */*; q=0.01",
   "Accept-Language"="zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3",
@@ -238,7 +239,7 @@ httpheader<- c(
   "X-Requested-With"="XMLHttpRequest",
   "Connection"="keep-alive"
 )
-myHandle<- getCurlHandle(httpheader =httpheader,
+myHandle<- getCurlHandle(httpheader =myhttpheader,
                          verbose=TRUE,
                          connecttimeout=15,
                          cookiefile="",
@@ -296,18 +297,18 @@ sz_temp=szLonghu(startdateidx,enddateidx)
 
 # 1---------shenzhen longhubang end
 
-#column="szse",
+
 postlst=list(
   category="",
-  column="",
-  columnTitle="历史公告查询",
+  column="szse",
+  columnTitle=iconv("历史公告查询","","UTF-8"),
   limit="",
   pageNum=1,
-  pageSize=30,
+  pageSize=49,
   plate="",
-  seDate="请选择日期",
-  searchkey="可交换;",
-  showTitle="-1/searchkey/可交换",
+  seDate=iconv("请选择日期","","UTF-8"),
+  searchkey=iconv("可交换;","","UTF-8"),
+  showTitle=iconv("-1/searchkey/可交换","","UTF-8"),
   sortName="",	
   sortType="",
   stock="",
@@ -319,6 +320,21 @@ postlst=list(
 (temp=.tryWeb(postForm,theurl="http://www.cninfo.com.cn/cninfo-new/announcement/query",
              .params=postlst,
              curl=myHandle,style="POST",.encoding="UTF-8"))
+
+
+
+y=fromJSON(temp,nullValue=NA)
+
+#z=lapply(y$announcements,"[[",2)
+z=y$announcements
+#oopt <- options() 
+
+f <- function(lst)
+  function(nm) unlist(lapply(lst, "[[", nm), use.names=FALSE)
+
+
+df0 <- as.data.frame(Map(f(z), names(z[[1]])),stringsAsFactors=FALSE) 
+View(df0)
 
 #write.table(temp,"d:\\c2.html",row.names = "",col.names = "",quote=FALSE)
 
@@ -345,10 +361,10 @@ df0 <- as.data.frame(Map(f(z), names(z[[1]])))
 
 
 #-----
-library(RSQLite)
+
 library(RCurl)
 #library(XML)
-library(RJSONIO)
+
 drv <- dbDriver("SQLite")
 #con_anjuke <- dbConnect(drv, dbname = "d:\\data\\.sqlite")
 
