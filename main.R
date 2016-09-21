@@ -296,7 +296,7 @@ sz_temp=szLonghu(startdateidx,enddateidx)
 
 
 # 1---------shenzhen longhubang end
-
+#sse  szse
 
 postlst=list(
   category="",
@@ -304,7 +304,7 @@ postlst=list(
   columnTitle=iconv("历史公告查询","","UTF-8"),
   limit="",
   pageNum=1,
-  pageSize=49,
+  pageSize=30,
   plate="",
   seDate=iconv("请选择日期","","UTF-8"),
   searchkey=iconv("可交换;","","UTF-8"),
@@ -333,7 +333,7 @@ f <- function(lst)
   function(nm) unlist(lapply(lst, "[[", nm), use.names=FALSE)
 
 
-df0 <- as.data.frame(Map(f(z), names(z[[1]])),stringsAsFactors=FALSE) 
+df01 <- as.data.frame(Map(f(z), names(z[[1]])),stringsAsFactors=FALSE) 
 View(df0)
 
 #write.table(temp,"d:\\c2.html",row.names = "",col.names = "",quote=FALSE)
@@ -358,7 +358,7 @@ f <- function(lst)
 
 df0 <- as.data.frame(Map(f(z), names(z[[1]]))) 
 
-
+format(as.POSIXct(df0[,7]/1000, origin = "1970-01-01",tz="Asia/Shanghai") ,"%Y-%m-%d")
 
 #-----
 
